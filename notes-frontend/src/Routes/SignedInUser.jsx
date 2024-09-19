@@ -1,113 +1,115 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect } from "react";
 import Button from "../Components/Button";
 import Modal from "../Components/Modal";
 import Todos from "../Components/Todos";
 import "../styles.css";
-import { Context, Provider } from "../context/Provider";
-let token = "";
-export default function SignedInUser() {
+import { Context } from "../context/Provider";
+import {axiosInstance} from "../axios";
+import { useNavigate } from "react-router-dom";
+
+const useSignedInUser = () => {
   const { todo, edit, toggle, todos, err, dispatch } = useContext(Context);
-  
+  const navigate = useNavigate();
 
   useEffect(() => {
-    token ="Bearer "+localStorage.getItem("token")
-    const headers = {
-        
-      "Content-type": "application/json",
-      "auth-token": token,
-    
-  }
-    fetch("https://notes-mern-y8iv.onrender.com/notes/", {
-      method: "GET",
-      headers,
-    })
-      .then((data) => data.json())
-      .then((data) => dispatch({ type: "SET_TODOS", payload: data }))
-      .catch((err) => console.log(err));
-     
-  }, []);
-
-  const addTaskHandler = () => {
-    if (!edit.status) {
-      const payload = {
-        description: todo,
-      };
-
-      const headers = {
-        
-          "Content-type": "application/json",
-          "auth-token": token,
-        
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+    axiosInstance.defaults.headers.common["auth-token"] = `Bearer ${token}`;
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("/notes/");
+        dispatch({ type: "SET_TODOS", payload: response.data });
+      } catch (err) {
+        console.log(err);
       }
-      console.log({headers})
-      fetch("https://notes-mern-y8iv.onrender.com/notes/new", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers,
-      })
-        .then((data) => data.json())
-        .then((data) => dispatch({ type: "SET_TODOS", payload: data }))
-        .catch((err) => console.log(err));
+    };
+    fetchData();
+  }, [navigate, dispatch]);
+
+  const onLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
+  const onChangeTodo = (e) =>
+    dispatch({ type: "SET_TODO", payload: e.target.value });
+
+  const onAddTask = async () => {
+    if (!edit.status) {
+      try {
+        const response = await axiosInstance.post("/notes/new", { description: todo });
+        dispatch({ type: "SET_TODOS", payload: response.data });
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      fetch(`https://notes-mern-y8iv.onrender.com/notes/${edit.id}`, {
-        method: "PUT",
-        body: JSON.stringify({ description: todo }),
-        headers: {
-          "Content-type": "application/json",
-          "auth-token": token,
-        },
-      })
-        .then((data) => data.json())
-        .then((data) => dispatch({ type: "SET_TODOS", payload: data }))
-        .catch((err) => console.log(err));
-      dispatch({ type: "SET_EDIT", payload: { status: false, id: null } });
+      try {
+        const response = await axiosInstance.put(`/notes/${edit.id}`, { description: todo });
+        dispatch({ type: "SET_TODOS", payload: response.data });
+        dispatch({ type: "SET_EDIT", payload: { status: false, id: null } });
+      } catch (err) {
+        console.log(err);
+      }
     }
     dispatch({ type: "SET_TOGGLE", payload: false });
     dispatch({ type: "SET_TODO", payload: "" });
   };
 
+  const onCloseModal = () => {
+    dispatch({ type: "SET_TOGGLE", payload: false });
+    dispatch({ type: "SET_TODO", payload: "" });
+    dispatch({ type: "SET_EDIT", payload: { status: false, id: null } });
+  };
+
+  return {
+    onLogout,
+    onChangeTodo,
+    onAddTask,
+    onCloseModal,
+    toggle,
+    todo,
+    todos,
+    err,
+  };
+};
+
+export default function SignedInUser() {
+  const {
+    onLogout,
+    onChangeTodo,
+    onAddTask,
+    onCloseModal,
+    toggle,
+    todo,
+    todos,
+    err,
+  } = useSignedInUser();
+  const { dispatch, edit } = useContext(Context);
+
   return (
-    <Provider>
       <div className='App container mx-auto'>
-        <Button text='Logout' onClick={() => {localStorage.clear();window.location.href = '/'}} />
+        <Button text='Logout' onClick={onLogout} />
         <Button
           text='Add task'
           onClick={() => dispatch({ type: "SET_TOGGLE", payload: true })}
           className='flex'
         />
-        <Modal
-          toggle={toggle}
-          onClose={() => {
-            dispatch({ type: "SET_TOGGLE", payload: false });
-            dispatch({ type: "SET_TODO", payload: "" });
-            dispatch({
-              type: "SET_EDIT",
-              payload: { status: false, id: null },
-            });
-          }}
-        >
+        <Modal toggle={toggle} onClose={onCloseModal}>
           <input
             type='text'
             placeholder='enter the task'
             value={todo}
-            onChange={(e) =>
-              dispatch({ type: "SET_TODO", payload: e.target.value })
-            }
+            onChange={onChangeTodo}
           />
           <Button
             text={`${edit.status ? "Update" : "Add"} task`}
-            onClick={addTaskHandler}
+            onClick={onAddTask}
           />
         </Modal>
-        <Todos data={todos} dispatch={dispatch} />
+        <Todos data={todos} />
       </div>
-    </Provider>
   );
 }

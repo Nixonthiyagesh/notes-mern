@@ -1,21 +1,24 @@
-import { memo } from "react";
+import { memo, useContext } from "react";
 import Todo from "../Todo";
 import "./index.css";
-let i=0;
-const Todos = ({ data, dispatch }) => {
-  console.log(i++);
+import { Context } from "../../context/Provider";
+import {axiosInstance} from "../../axios";
 
-  const deleteHandler = (id) => {
-    fetch(`https://notes-mern-y8iv.onrender.com/notes/${id}`, {
-      method: "DELETE",
-      headers: {
-        "auth-token":
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmVhZTRhZTIxNmM3MTYwZmM2N2M1MDEiLCJpYXQiOjE3MjY2NzAwMzB9.IAekhkm4PqQnAU0clbpYKQjyaEomCxUEY_7BPkPcBuE",
-      },
-    })
-      .then((data) => data.json())
-      .then((data) => dispatch({ type: "SET_TODOS", payload: data }))
-      .catch((err) => console.log(err));
+const Todos = ({ data }) => {
+  const token = localStorage.getItem("token");
+  const { dispatch } = useContext(Context);
+  const deleteHandler = async (id) => {
+    try {
+      const { data } = await axiosInstance.delete(`notes/${id}`, {
+        headers: {
+          "auth-token":
+            "Bearer " + token,
+        },
+      });
+      dispatch({ type: "SET_TODOS", payload: data });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const editHandler = (id, data) => {

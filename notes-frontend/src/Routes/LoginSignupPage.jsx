@@ -1,52 +1,46 @@
 // LoginSignupPage.js
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { axiosInstance } from '../axios';
 
 const LoginSignupPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/signedin');
+    }
+  }, [navigate]);
 
   const handleSubmit = async(event) => {
     event.preventDefault();
     // Handle login or signup logic here
     if(isLogin){
-    const result = await fetch('https://notes-mern-y8iv.onrender.com/notes/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          email,
-          password
-        }),
-        headers: {
-          'Content-type': 'application/json'
-        } 
-      })
-      const data = await result.json();
-      const statusCode = result.status;
-      if(statusCode === 200){
-        localStorage.setItem('token', data.token)
-        window.location.href = '/signedin';
-      }
-    }else{
-     const res = await fetch('https://notes-mern-y8iv.onrender.com/notes/signup', {
-        method: 'POST',
-        body: JSON.stringify({
-          name:username,
-          email,
-          password
-        }),
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
-      const data = await res.json();
-      const statusCode = res.status;
-      if(statusCode === 200){
-        localStorage.setItem('token', data.token)
-        window.location.href = '/login';
-      }
+    const { data, status } = await axiosInstance.post('/notes/login', {
+      email,
+      password
+    });
+    if (status === 200) {
+      localStorage.setItem('token', data.token);
+      navigate('/signedin');
     }
+  } else {
+    const { data, status } = await axiosInstance.post('/notes/login', {
+      email,
+      password,
+      name: username
+    });
+    if (status === 200) {
+      localStorage.setItem('token', data.token);
+      navigate('/login');
+    }
+  }
   };
 
   return (
