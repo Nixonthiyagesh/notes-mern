@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.App {
+  font-family: sans-serif;
+}
+input {
+  padding: 5px;
+  width: 70%;
+  margin: 10px;
+}
+
+/* styles.css */
+
+div.signup-login {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #666;
+}
+
+input:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  width: 100%;
+  height: 40px;
+  background-color: #4CAF50!important;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: #3e8e41!important;
+}
+
+p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #666;
+}
+
+a {
+  text-decoration: none;
+  color: #4CAF50;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+a:hover {
+  color: #3e8e41;
+}

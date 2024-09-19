@@ -1,0 +1,9 @@
+ GET    http://localhost:4000/notes/
+ Content-Type: application/json
+ auth-token:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzdmM2ZkYjA2OWU0ZWRkNzZlODNmMzEiLCJpYXQiOjE2NjkyODY4ODJ9.ZNleiTF0lpgXl7J7vNd_Hb5NRIUivcxxGnGSBSxX424
+
+{
+    "email":"abq@abq.com",
+    "password":"qwerty",
+    "description":"wefwf"
+}

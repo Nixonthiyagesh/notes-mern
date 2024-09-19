@@ -1,0 +1,16 @@
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.button-container button {
+  /* background-color: transparent; */
+  /* border: 2px solid turquoise; */
+  /* color: rgb(91, 93, 93); */
+  /* padding: 10px; */
+  /* border-radius: 5px; */
+  /* margin-bottom: 15px; */
+  /* background-color: beige; */
+  /* font-weight: 600; */
+}
