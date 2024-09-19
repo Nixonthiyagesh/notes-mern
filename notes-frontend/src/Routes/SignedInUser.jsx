@@ -24,7 +24,7 @@ export default function SignedInUser() {
       "auth-token": token,
     
   }
-    fetch("http://localhost:4000/notes/", {
+    fetch("https://notes-mern-y8iv.onrender.com/notes/", {
       method: "GET",
       headers,
     })
@@ -47,7 +47,7 @@ export default function SignedInUser() {
         
       }
       console.log({headers})
-      fetch("http://localhost:4000/notes/new", {
+      fetch("https://notes-mern-y8iv.onrender.com/notes/new", {
         method: "POST",
         body: JSON.stringify(payload),
         headers,
@@ -56,7 +56,7 @@ export default function SignedInUser() {
         .then((data) => dispatch({ type: "SET_TODOS", payload: data }))
         .catch((err) => console.log(err));
     } else {
-      fetch(`http://localhost:4000/notes/${edit.id}`, {
+      fetch(`https://notes-mern-y8iv.onrender.com/notes/${edit.id}`, {
         method: "PUT",
         body: JSON.stringify({ description: todo }),
         headers: {

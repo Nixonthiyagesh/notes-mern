@@ -12,7 +12,7 @@ const LoginSignupPage = () => {
     event.preventDefault();
     // Handle login or signup logic here
     if(isLogin){
-    const result = await fetch('http://localhost:4000/notes/login', {
+    const result = await fetch('https://notes-mern-y8iv.onrender.com/notes/login', {
         method: 'POST',
         body: JSON.stringify({
           email,
@@ -29,7 +29,7 @@ const LoginSignupPage = () => {
         window.location.href = '/signedin';
       }
     }else{
-     const res = await fetch('http://localhost:4000/notes/signup', {
+     const res = await fetch('https://notes-mern-y8iv.onrender.com/notes/signup', {
         method: 'POST',
         body: JSON.stringify({
           name:username,

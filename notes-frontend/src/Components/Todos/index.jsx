@@ -6,7 +6,7 @@ const Todos = ({ data, dispatch }) => {
   console.log(i++);
 
   const deleteHandler = (id) => {
-    fetch(`http://localhost:4000/notes/${id}`, {
+    fetch(`https://notes-mern-y8iv.onrender.com/notes/${id}`, {
       method: "DELETE",
       headers: {
         "auth-token":
