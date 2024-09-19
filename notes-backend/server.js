@@ -12,7 +12,12 @@ mongoose.connect(process.env.DATABASE_ACCESS, () =>
 );
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://notes-mern-fe.onrender.com", // Allow only your frontend domain
+    credentials: true, // If you need to include cookies or authorization headers
+  })
+);
 app.use("/notes", routeUrls);
 
 app.listen(process.env.port || 4000, () =>

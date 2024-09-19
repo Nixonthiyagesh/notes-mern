@@ -2,8 +2,12 @@
 
 # dependencies
 /notes-frontend/node_modules
+/notes-frontend/build
+
 /.pnp
 .pnp.js
+
+.env
 
 /notes-backend/node_modules
 /notes-backend/.env
