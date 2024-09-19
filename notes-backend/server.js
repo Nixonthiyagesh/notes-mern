@@ -15,4 +15,6 @@ app.use(express.json());
 app.use(cors());
 app.use("/notes", routeUrls);
 
-app.listen(4000, () => console.log("listening localhost 4000"));
+app.listen(process.env.port || 4000, () =>
+  console.log("listening localhost 4000")
+);
