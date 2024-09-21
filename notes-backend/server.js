@@ -20,6 +20,8 @@ app.use(
 );
 app.use("/notes", routeUrls);
 
-app.listen(process.env.port || 4000, () =>
-  console.log("listening localhost 4000")
+const port = process.env.port || 4000
+
+app.listen(port, () =>
+  console.log("listening localhost "+port)
 );
